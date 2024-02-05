@@ -6,13 +6,13 @@ import './RecipeCard.css';
 
 export default function RecipeCard () {
   const [recipes, setRecipes] = useState([])
-  const [image, setImage] = useState(null);
+  // const [image, setImage] = useState(null);
   const { getRecipes } = useRecipeAPI();
-  const { getImage } = useContentful();
+  // const { getImage } = useContentful();
   const [loading, setLoading] = useState(false);
 
   const { id } = useParams();
-  // recipes.fields.ingredients.split(',')
+
 
   const allIngredients = recipes.flatMap((recipe) => {
     // Check if 'fields' is defined for the current recipe
@@ -34,19 +34,19 @@ export default function RecipeCard () {
   
     
 
-    useEffect(() => {
-      // Set loading to true when starting to fetch data
-      setLoading(true);
+    // useEffect(() => {
+    //   // Set loading to true when starting to fetch data
+    //   setLoading(true);
   
-      getRecipes()
-        .then((allRecipes) => {
-          setRecipes(allRecipes.items);
-        })
-        .finally(() => {
-          // Set loading to false when data fetching is complete (regardless of success or failure)
-          setLoading(false);
-        });
-    }, []);
+    //   getRecipes()
+    //     .then((allRecipes) => {
+    //       setRecipes(allRecipes.items);
+    //     })
+    //     .finally(() => {
+    //       // Set loading to false when data fetching is complete (regardless of success or failure)
+    //       setLoading(false);
+    //     });
+    // }, []);
 
 
 

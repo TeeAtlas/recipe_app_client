@@ -1,32 +1,33 @@
 import { useState, useEffect } from 'react';
-import useContentful from './useContentful';
+// import useContentful from './useContentful';
 import './Homepage.css';
 import {useNavigate} from 'react-router-dom';
 
 const Homepage = () => {
     const [recipes, setRecipes] = useState([]);
-    const { getRecipes } = useContentful();
+    // const { getRecipes } = useContentful();
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        // Set loading to true when starting to fetch data
-        setLoading(true);
-    
+
         getRecipes()
-          .then((allRecipes) => {
-            // Shuffle the recipes and get the first three
-            const shuffledRecipes = shuffleArray(allRecipes.items);
-            const randomThreeRecipes = shuffledRecipes.slice(0, 3);
     
-            // Update state with the fetched recipes
-            setRecipes(randomThreeRecipes);
-          })
-          .finally(() => {
-            // Set loading to false when data fetching is complete (regardless of success or failure)
-            setLoading(false);
-          });
       }, []);
 
+      async function getRecipes() {
+        try { 
+            setLoading(true);
+            const response = await fetch("http://localhost:8000/recipes");
+            const recipes = await response.json();
+            setRecipes(recipes);
+        } catch (error) {
+            console.log(recipes);
+            console.log(error);
+        } finally {
+            setLoading(false);
+        }
+      }
+      
 
     // Function to shuffle an array randomly
     const shuffleArray = (array) => {
@@ -55,13 +56,15 @@ const Homepage = () => {
 
             {loading ? <h3>Loading...</h3> :<section className="featured-recipes">
                 <div className='homepage-container'>
-                    {recipes.map((recipe) => (
-                        <div key={recipe.sys.id} className="homepage-recipe-card" onClick={() => navigate(`${recipe.sys.id}`)}>
-                            <h3>{recipe.fields.name}</h3>
+                    
+                    {recipes.length > 0 ? recipes.map((recipe) => (
+
+                        <div key={recipe.sys.id} className="homepage-recipe-card" onClick={() => navigate(`${recipe.id}`)}>
+                            <h3>{recipe.name}</h3>
                             <img src={recipe.fields.image.fields.file.url} alt="pasta" />
                             {/* <p>{recipe.fields.description}</p> */}
                         </div>
-                    ))}
+                     )) : null}
                 </div>
             </section>}
         </div>
