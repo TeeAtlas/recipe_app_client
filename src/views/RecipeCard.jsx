@@ -1,60 +1,60 @@
 import { useState, useEffect } from 'react';
-import useRecipeAPI from './useRecipeAPI';
-import useContentful from './useContentful';
 import { useParams } from 'react-router-dom';
 import './RecipeCard.css';
 
-export default function RecipeCard () {
+
+//pass getRecipes funtion as a prop
+export default function RecipeCard (getRecipes) {
   const [recipes, setRecipes] = useState([])
-  // const [image, setImage] = useState(null);
-  const { getRecipes } = useRecipeAPI();
-  // const { getImage } = useContentful();
   const [loading, setLoading] = useState(false);
 
   const { id } = useParams();
 
 
-  const allIngredients = recipes.flatMap((recipe) => {
-    // Check if 'fields' is defined for the current recipe
-    if (recipe && recipe.ingredients) {
-      const ingredientsArray = recipe.ingredients.split(',').map((ingredient) => ingredient.trim());
+  // const allIngredients = recipes.flatMap((recipe) => {
+  //   if (recipe && recipe.ingredients) {
+  //     const ingredientsArray = recipe.ingredients.split(',').map((ingredient) => ingredient.trim());
       
-      const recipeId = recipe.id; // Get the recipe ID
-      return ingredientsArray.map((ingredient) => ({
-        id: recipeId,
-        ingredient,
-      }));
-    }
-    return [];
-  });
+  //     const recipeId = recipe.id; // Get the recipe ID
+  //     return ingredientsArray.map((ingredient) => ({
+  //       id: recipeId,
+  //       ingredient,
+  //     }));
+  //   }
+  //   return [];
+  // });
 
-  const specificIngredients = allIngredients
-    .filter((ingredient) => ingredient.id === id)
-    .map((ingredient) => ingredient.ingredient);
+  // const specificIngredients = allIngredients
+  //   .filter((ingredient) => ingredient.id === id)
+  //   .map((ingredient) => ingredient.ingredient);
   
     
-
     useEffect(() => {
-      // Set loading to true when starting to fetch data
-      setLoading(true);
-  
-      getRecipes()
-        .then((recipes) => {
-          setRecipes(recipes.items);
-        })
-        .finally(() => {
-          // Set loading to false when data fetching is complete (regardless of success or failure)
-          setLoading(false);
-        });
-    }, [getRecipes]);
 
+      getRecipes()
+  
+    }, []);
+
+    async function getRecipes() {
+      try { 
+          setLoading(true);
+          const response = await fetch("http://localhost:8000/recipes");
+          const recipes = await response.json();
+          setRecipes(recipes);
+      } catch (error) {
+          console.log(recipes);
+          console.log(error);
+      } finally {
+          setLoading(false);
+      }
+    }
+    
 
 
   return (
     <>
     { loading ? <h3>Loading...</h3> :
-      recipes.filter((recipe) => recipe.id === id).map((recipe) => (
-        <div key={recipe.sys.id} className="recipe-card"> 
+        <div className="recipe-card"> 
           <div className="recipe-content">
             <img className="recipe-image" src={recipe.image_path} alt="pasta"  />
             <div className='ingr-instr'>
@@ -68,7 +68,6 @@ export default function RecipeCard () {
             </div>
           </div>
         </div> 
-      ))}
     </>
   )
     

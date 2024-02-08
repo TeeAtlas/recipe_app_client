@@ -1,11 +1,9 @@
 import { useState, useEffect } from 'react';
-// import useContentful from './useContentful';
-import './Homepage.css';
 import {useNavigate} from 'react-router-dom';
+import './Homepage.css';
 
 const Homepage = () => {
     const [recipes, setRecipes] = useState([]);
-    // const { getRecipes } = useContentful();
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
