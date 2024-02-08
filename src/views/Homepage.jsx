@@ -59,10 +59,10 @@ const Homepage = () => {
                     
                     {recipes.length > 0 ? recipes.map((recipe) => (
 
-                        <div key={recipe.sys.id} className="homepage-recipe-card" onClick={() => navigate(`${recipe.id}`)}>
-                            <h3>{recipe.name}</h3>
-                            <img src={recipe.fields.image.fields.file.url} alt="pasta" />
-                            {/* <p>{recipe.fields.description}</p> */}
+                        <div key={recipe.id} className="homepage-recipe-card" onClick={() => navigate(`${recipe.id}`)}>
+                            <h3>{recipe.title}</h3>
+                            <img src={recipe.image_path} alt="pasta" />
+                            <p>{recipe.description}</p>
                         </div>
                      )) : null}
                 </div>

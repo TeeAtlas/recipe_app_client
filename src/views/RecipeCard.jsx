@@ -16,10 +16,10 @@ export default function RecipeCard () {
 
   const allIngredients = recipes.flatMap((recipe) => {
     // Check if 'fields' is defined for the current recipe
-    if (recipe && recipe.fields && recipe.fields.ingredients) {
-      const ingredientsArray = recipe.fields.ingredients.split(',').map((ingredient) => ingredient.trim());
+    if (recipe && recipe.ingredients) {
+      const ingredientsArray = recipe.ingredients.split(',').map((ingredient) => ingredient.trim());
       
-      const recipeId = recipe.sys.id; // Get the recipe ID
+      const recipeId = recipe.id; // Get the recipe ID
       return ingredientsArray.map((ingredient) => ({
         id: recipeId,
         ingredient,
@@ -34,37 +34,37 @@ export default function RecipeCard () {
   
     
 
-    // useEffect(() => {
-    //   // Set loading to true when starting to fetch data
-    //   setLoading(true);
+    useEffect(() => {
+      // Set loading to true when starting to fetch data
+      setLoading(true);
   
-    //   getRecipes()
-    //     .then((allRecipes) => {
-    //       setRecipes(allRecipes.items);
-    //     })
-    //     .finally(() => {
-    //       // Set loading to false when data fetching is complete (regardless of success or failure)
-    //       setLoading(false);
-    //     });
-    // }, []);
+      getRecipes()
+        .then((recipes) => {
+          setRecipes(recipes.items);
+        })
+        .finally(() => {
+          // Set loading to false when data fetching is complete (regardless of success or failure)
+          setLoading(false);
+        });
+    }, [getRecipes]);
 
 
 
   return (
     <>
     { loading ? <h3>Loading...</h3> :
-      recipes.filter((recipe) => recipe.sys.id === id).map((recipe) => (
+      recipes.filter((recipe) => recipe.id === id).map((recipe) => (
         <div key={recipe.sys.id} className="recipe-card"> 
           <div className="recipe-content">
-            <img className="recipe-image" src={recipe.fields.image.fields.file.url} alt="pasta"  />
+            <img className="recipe-image" src={recipe.image_path} alt="pasta"  />
             <div className='ingr-instr'>
-            <h2 className='card-header'>{recipe.fields.name}</h2> 
+            <h2 className='card-header'>{recipe.title}</h2> 
               <ul className='ingredients'>
                 {specificIngredients.map((ingredient, index) =>
                   <li key={index}>{ingredient}</li>
                 )}
               </ul>
-              <p className='instructions'>{recipe.fields.instructions}</p>
+              <p className='instructions'>{recipe.instructions}</p>
             </div>
           </div>
         </div> 
