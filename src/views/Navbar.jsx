@@ -7,9 +7,26 @@ import { useState, useEffect } from "react";
 
 
 
-const NavBar = ({recipes}) => {
+const NavBar = () => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [recipes, setRecipes] = useState([]);
+  const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    getRecipes();
+  }, []);
+
+  async function getRecipes() {
+    try {
+      const response = await fetch("http://localhost:8000/recipes");
+      const recipesData = await response.json();
+      setRecipes(recipesData);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   const allIngredients = recipes.flatMap((recipe) => {
     // Check if 'fields' is defined for the current recipe

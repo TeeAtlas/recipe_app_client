@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import "./RecipeCard.css";
 
-//pass getRecipes funtion as a prop
 export default function RecipeCard() {
   const [recipe, setRecipe] = useState({});
   const [loading, setLoading] = useState(true);
