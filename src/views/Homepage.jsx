@@ -1,31 +1,8 @@
-import { useState, useEffect } from 'react';
+
 import {useNavigate} from 'react-router-dom';
 import './Homepage.css';
 
-const Homepage = () => {
-    const [recipes, setRecipes] = useState([]);
-    const [loading, setLoading] = useState(false);
-
-    useEffect(() => {
-
-        getRecipes()
-    
-      }, []);
-
-      async function getRecipes() {
-        try { 
-            setLoading(true);
-            const response = await fetch("http://localhost:8000/recipes");
-            const recipes = await response.json();
-            setRecipes(recipes);
-        } catch (error) {
-            console.log(recipes);
-            console.log(error);
-        } finally {
-            setLoading(false);
-        }
-      }
-      
+const Homepage = ({recipes, loading}) => {
 
     // Function to shuffle an array randomly
     const shuffleArray = (array) => {
@@ -60,7 +37,7 @@ const Homepage = () => {
                         <div key={recipe.id} className="homepage-recipe-card" onClick={() => navigate(`${recipe.id}`)}>
                             <h3>{recipe.title}</h3>
                             <img src={recipe.image_path} alt="pasta" />
-                            <p>{recipe.description}</p>
+                            {/* <p>{recipe.description}</p> */}
                         </div>
                      )) : null}
                 </div>

@@ -1,44 +1,47 @@
-import React from 'react'
-import './Gallery.css'
-import { useState, useEffect } from 'react';
-import useContentfulGallery from './useContentfulGallery';
+import { useParams } from 'react-router-dom';
+import { useState, useEffect }  from 'react';
+import './gallery.css';
+
 
 function Gallery() {
-  const [photos, setPhotos] = useState([]);
-  const { getPhotos } = useContentfulGallery();
-  const [loading, setLoading] = useState(false);
+  const [galleryInfo, setGalleryInfo] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [index, setIndex] = useState(0);
+  // const { id } = useParams();
 
   useEffect(() => {
-    const fetchPhotos = async () => {
-      try {
-        const allPhotos = await getPhotos();
-        setPhotos(allPhotos.includes.Asset);
-        console.log(allPhotos.includes.Asset);
-      } catch (error) {
-        console.log(`Error fetching recipes ${error}`);
-      }
-    }
-    fetchPhotos();
+    getGalleryInfo();
   }, []);
+
+  async function getGalleryInfo() {
+    try {
+      setLoading(true);
+      const response = await fetch(`http://localhost:8000/gallery`);
+      const galleryData = await response.json();
+      setGalleryInfo(galleryData);
+      console.log(galleryData);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   const clickPrev = () => {
     if (index === 0) {
-      setIndex(photos.length - 1);
+      setIndex(galleryInfo.length - 1);
     } else {
       setIndex(index - 1);
     }
   }
 
   const clickNext = () => {
-    if (index === photos.length - 1) {
+    if (index === galleryInfo.length - 1) {
       setIndex(0);
     } else {
       setIndex(index + 1);
     }
   }
-
-
 
   return (
     <>
@@ -49,10 +52,10 @@ function Gallery() {
     <section>
         <div className='gallery'>
         <button onClick={clickPrev}>&lt;</button>
-      {photos.length > 0 ? (
-        <div key={photos[index].sys.id} className="gallery-card">
-          <img src={photos[index].fields.file.url} alt="" />
-          <h3>{photos[index].fields.title}</h3>
+      {galleryInfo && galleryInfo.length > 0 ? (
+        <div key={galleryInfo[index].id} className="gallery-card">
+          <img src={galleryInfo[index].image_path} alt="" />
+          <h3>{galleryInfo[index].name}</h3>
         </div>
       ) : (
         <p>No photos available.</p>

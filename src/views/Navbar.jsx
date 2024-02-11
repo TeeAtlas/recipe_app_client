@@ -2,33 +2,21 @@ import Dropdown from "./Dropdown";
 import logo from '../assets/farfalle.png'
 import searchIcon from '../assets/search.png'
 import './Navbar.css'
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { useState, useEffect } from "react";
-import useContentful from './useContentful'
 
 
 
-const NavBar = () => {
+const NavBar = ({recipes}) => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [recipes, setRecipes] = useState([]);
-  const { getRecipes } = useContentful();
-  const [results, setResults] = useState([]);
-
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    getRecipes().then((res) => {
-      setRecipes(res.items);
-    });
-  }, []);
 
 
   const allIngredients = recipes.flatMap((recipe) => {
     // Check if 'fields' is defined for the current recipe
-    if (recipe && recipe.fields && recipe.fields.ingredients) {
-      const ingredientsArray = recipe.fields.ingredients.split(',').map((ingredient) => ingredient.trim());
+    if (recipe && recipe.ingredients) {
+      const ingredientsArray = recipe.ingredients.split(',').map((ingredient) => ingredient.trim());
       
-      const recipeId = recipe.sys.id; // Get the recipe ID
+      const recipeId = recipe.id; // Get the recipe ID
       return ingredientsArray.map((ingredient) => ({
         id: recipeId,
         ingredient,
@@ -76,7 +64,7 @@ const NavBar = () => {
           <NavLink to="/"><img className="logo" src={logo} alt='logo'/></NavLink>
           <NavLink to="/" >Homepage</NavLink>
           <li>
-            <Dropdown/>
+            <Dropdown recipes={recipes}/>
           </li>
           <NavLink to="/gallery">Gallery</NavLink>
         </ul>
